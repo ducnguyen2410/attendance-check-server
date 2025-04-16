@@ -25,7 +25,7 @@ public class OvertimeSalaryController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> getOvertimeSalaries() {
         List<OvertimeSalaryDto> overtimeSalaries = overtimeSalaryService.getAllOvertimeSalary();
         CustomResponse<List<OvertimeSalaryDto>> response = new CustomResponse<>(200, overtimeSalaries);
@@ -33,7 +33,7 @@ public class OvertimeSalaryController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> getOvertimeSalaryById(@PathVariable  Long id) {
         OvertimeSalaryDto overtimeSalary = overtimeSalaryService.getOvertimeSalaryById(id);
         CustomResponse<OvertimeSalaryDto> response = new CustomResponse<>(200, overtimeSalary);

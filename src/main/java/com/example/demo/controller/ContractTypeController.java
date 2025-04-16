@@ -8,6 +8,7 @@ import com.example.demo.response.CustomResponse;
 import com.example.demo.service.ContractTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ContractTypeController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<?> getContractTypes() {
         List<ContractTypeDto> contractTypes = contractTypeService.getContractTypes();
         CustomResponse<List<ContractTypeDto>> response = new CustomResponse<>(200, contractTypes);
@@ -30,6 +32,7 @@ public class ContractTypeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<?> getContractTypeById(@PathVariable Long id) {
         ContractTypeDto contractType = contractTypeService.getContractTypeById(id);
         CustomResponse<ContractTypeDto> response = new CustomResponse<>(200, contractType);
@@ -37,6 +40,7 @@ public class ContractTypeController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createContractType(@RequestBody ContractTypePayload contractTypePayload) {
         ContractTypeDto contractType = contractTypeService.createContractType(contractTypePayload);
         CustomResponse<ContractTypeDto> response = new CustomResponse<>(200, contractType);
@@ -44,6 +48,7 @@ public class ContractTypeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateContractType(@PathVariable Long id, @RequestBody ContractTypePayload contractTypePayload) {
         try {
             contractTypePayload.setId(id);
@@ -57,6 +62,7 @@ public class ContractTypeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteContractType(@PathVariable Long id) {
         try {
             ContractTypeDto contractType = contractTypeService.deleteContractType(id);

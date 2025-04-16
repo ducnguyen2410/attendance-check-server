@@ -33,7 +33,7 @@ public class OvertimeController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<?> getOvertimeById(@PathVariable Long id) {
         OvertimeDto overtime = overtimeService.getOvertimeById(id);
         CustomResponse<OvertimeDto> customResponse = new CustomResponse<>(200, overtime);
@@ -82,6 +82,7 @@ public class OvertimeController {
 
     // Find overtimes by user id
     @GetMapping("/user-id/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateOvertime(#id)")
     public ResponseEntity<?> getOvertimeByUserId(@PathVariable Long id) {
         List<OvertimeUserDto> overtimeUserDtoList = overtimeService.getOvertimeByUserId(id);
         CustomResponse<List<OvertimeUserDto>> customResponse = new CustomResponse<>(200, overtimeUserDtoList);

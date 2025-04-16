@@ -7,6 +7,8 @@ import com.example.demo.payload.ContractPayload;
 import com.example.demo.response.CustomResponse;
 import com.example.demo.service.ContractService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class ContractController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getAllContracts() {
         List<ContractDto> contracts = contractService.getAllContracts();
         CustomResponse<List<ContractDto>> response = new CustomResponse<>(200, contracts);
@@ -29,6 +32,7 @@ public class ContractController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateContract(#id)")
     public ResponseEntity<?> getContractById(@PathVariable Long id) {
         ContractDto contract = contractService.getContractById(id);
         CustomResponse<ContractDto> response = new CustomResponse<>(200, contract);
@@ -36,6 +40,7 @@ public class ContractController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> createContract(@RequestBody ContractPayload contractPayload) {
         ContractDto contract = contractService.createContract(contractPayload);
         CustomResponse<ContractDto> response = new CustomResponse<>(200, contract);
@@ -43,6 +48,7 @@ public class ContractController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateContract(#id)")
     public ResponseEntity<?> updateContract(@PathVariable Long id, @RequestBody ContractPayload contractPayload) {
         try {
             contractPayload.setId(id);
@@ -56,6 +62,7 @@ public class ContractController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteContract(@PathVariable Long id) {
         try {
             ContractDto contract = contractService.deleteContract(id);

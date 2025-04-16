@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -28,6 +29,8 @@ public class Contract {
     private User user;
     private LocalTime startHour;
     private LocalTime endHour;
+    private LocalDate startDate;
+    private LocalDate endDate;
     @CreationTimestamp
     private LocalDateTime createTime;
     @UpdateTimestamp

@@ -15,6 +15,8 @@ public class ContractMapper {
                 .contractType(contractType)
                 .startHour(DateUtil.toLocalTime(contract.getStartHour()))
                 .endHour(DateUtil.toLocalTime(contract.getEndHour()))
+                .startDate(DateUtil.toLocalDate(contract.getStartDate()))
+                .endDate(DateUtil.toLocalDate(contract.getEndDate()))
                 .build();
     }
 
@@ -23,6 +25,7 @@ public class ContractMapper {
         contract.setContractType(contractType);
         if(contractPayload.getEndHour() != null) contract.setEndHour(DateUtil.toLocalTime(contractPayload.getEndHour()));
         if(contractPayload.getStartHour() != null) contract.setStartHour(DateUtil.toLocalTime(contractPayload.getStartHour()));
+        // Enable validate start date and end date in date util
     }
 
     public static ContractDto toContractDto(Contract contract, User user) {
@@ -33,6 +36,8 @@ public class ContractMapper {
                 .userId(user.getId())
                 .startHour(contract.getStartHour())
                 .endHour(contract.getEndHour())
+                .startDate(contract.getStartDate())
+                .endDate(contract.getEndDate())
                 .createTime(contract.getCreateTime())
                 .updateTime(contract.getUpdateTime())
                 .build();

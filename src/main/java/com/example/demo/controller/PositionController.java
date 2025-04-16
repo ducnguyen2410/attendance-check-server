@@ -28,7 +28,7 @@ public class PositionController {
 
     // Get all positions
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<?> getAllPositions() {
         List<PositionDto> positions = positionService.getAllPositions();
         CustomResponse<List<PositionDto>> successResponse = new CustomResponse<>(200, positions);
@@ -37,7 +37,7 @@ public class PositionController {
 
     // Get a specific position
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ResponseEntity<?> getPositionById(@PathVariable("id") Long id) {
         PositionDto position = positionService.getPositionById(id);
         CustomResponse<PositionDto> successResponse = new CustomResponse<>(200, position);

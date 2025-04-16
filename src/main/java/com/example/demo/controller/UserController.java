@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToUpdateOrDeleteUser(#id)")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserPayload userPayload, HttpServletRequest request) {
         try {
             userPayload.setId(id);
@@ -78,8 +78,8 @@ public class UserController {
 
     // Find user
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
-    public ResponseEntity<?> getUserById(@PathVariable Long id, HttpServletRequest request) {
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToUpdateOrDeleteUser(#id)")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             UserDto user = userService.getUserById(id);
             CustomResponse<UserDto> customResponse = new CustomResponse<>(200, user);
@@ -91,7 +91,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         try {
             UserDto user = userService.deleteUser(id);
@@ -105,8 +105,8 @@ public class UserController {
 
     // Find User Data
     @GetMapping("/{id}/details")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
-    public ResponseEntity<?> getUserData(@PathVariable Long id, HttpServletRequest request) {
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToUpdateOrDeleteUser(#id)")
+    public ResponseEntity<?> getUserData(@PathVariable Long id) {
         try {
             UserDetailDto userDataDto = userService.getUserDetail(id);
             CustomResponse<UserDetailDto> customResponse = new CustomResponse<>(200, userDataDto);
@@ -118,8 +118,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/check-list")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
-    public ResponseEntity<?> getUserCheckList(@PathVariable Long id, HttpServletRequest request) {
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToUpdateOrDeleteUser(#id)")
+    public ResponseEntity<?> getUserCheckList(@PathVariable Long id) {
         try {
             UserCheckListDto userCheckListDto = userService.getUserCheckListDto(id);
             CustomResponse<UserCheckListDto> customResponse = new CustomResponse<>(200, userCheckListDto);

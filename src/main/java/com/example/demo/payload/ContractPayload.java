@@ -15,4 +15,6 @@ public class ContractPayload {
     private Long contractTypeId;
     private String startHour;
     private String endHour;
+    private String startDate;
+    private String endDate;
 }

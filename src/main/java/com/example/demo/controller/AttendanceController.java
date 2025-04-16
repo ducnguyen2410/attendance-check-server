@@ -6,6 +6,8 @@ import com.example.demo.payload.AttendancePayload;
 import com.example.demo.response.CustomResponse;
 import com.example.demo.service.AttendanceService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,18 +23,21 @@ public class AttendanceController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getAllAttendance() {
         CustomResponse<List<AttendanceDto>> response = new CustomResponse<>(200, attendanceService.getAllAttendance());
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAttendance(#id)")
     public ResponseEntity<?> getAttendanceById(@PathVariable Long id) {
         CustomResponse<AttendanceDto> response = new CustomResponse<>(200, attendanceService.getAttendanceById(id));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAttendance(#attendancePayload.userId)")
     public ResponseEntity<?> createAttendance(@RequestBody AttendancePayload attendancePayload) {
         AttendanceDto newAttendance = attendanceService.createAttendance(attendancePayload);
         CustomResponse<AttendanceDto> response =  new CustomResponse<>(200, newAttendance);
@@ -40,6 +45,7 @@ public class AttendanceController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAttendance(#id)")
     public ResponseEntity<?> updateAttendance(@PathVariable Long id, @RequestBody AttendancePayload attendancePayload) {
         try {
             AttendanceDto updatedAttendance = attendanceService.updateAttendance(attendancePayload);
@@ -52,6 +58,7 @@ public class AttendanceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteAttendance(@PathVariable Long id) {
         try {
             AttendanceDto deletedAttendance = attendanceService.deleteAttendance(id);

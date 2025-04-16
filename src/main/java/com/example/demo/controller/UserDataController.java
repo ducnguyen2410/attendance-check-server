@@ -32,7 +32,7 @@ public class UserDataController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateUserData(#id)")
     public ResponseEntity<?> getUserDataById(@PathVariable Long id) {
         UserDataDto userData = userDataService.getUserDataById(id);
         CustomResponse<UserDataDto> customResponse = new CustomResponse<>(200, userData);
@@ -40,7 +40,7 @@ public class UserDataController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER') and @authCheck.hasPermissionToUpdateOrDelete(#userDataPayload.userId)")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateUserData(#userDataPayload.userId)")
     public ResponseEntity<?> createUserData(@RequestBody UserDataPayload userDataPayload) {
         try {
             UserDataDto userData = userDataService.createUserData(userDataPayload);
@@ -53,7 +53,7 @@ public class UserDataController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateUserData(#userDataPayload.userId)")
     public ResponseEntity<?> updateUserData(@PathVariable Long id, @RequestBody UserDataPayload userDataPayload) {
         try {
             userDataPayload.setId(id);
@@ -67,7 +67,7 @@ public class UserDataController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER') and @authCheck.hasPermissionToUpdateOrDelete(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateUserData(#id)")
     public ResponseEntity<?> deleteUserData(@PathVariable Long id) {
         try {
             UserDataDto userData = userDataService.deleteUserData(id);

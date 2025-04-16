@@ -26,7 +26,7 @@ public class PositionLevelController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<?> getAllPositionLevels() {
         List<PositionLevelDto> positionLevels = positionLevelService.getPositionLevels();
         CustomResponse<List<PositionLevelDto>> successResponse = new CustomResponse<>(200, positionLevels);
@@ -34,7 +34,7 @@ public class PositionLevelController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<?> getPositionLevelById(@PathVariable Long id) {
         PositionLevelDto positionLevel = positionLevelService.getPositionLevelById(id);
         CustomResponse<PositionLevelDto> successResponse = new CustomResponse<>(200, positionLevel);

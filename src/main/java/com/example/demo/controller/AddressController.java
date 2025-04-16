@@ -7,6 +7,7 @@ import com.example.demo.payload.AddressPayload;
 import com.example.demo.response.CustomResponse;
 import com.example.demo.service.AddressService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class AddressController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getAllAddresses() {
         List<AddressDto> addresses = addressService.getAddresses();
         CustomResponse<List<AddressDto>> response = new CustomResponse<>(200, addresses);
@@ -29,6 +31,7 @@ public class AddressController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAddress(#id)")
     public ResponseEntity<?> getAddressById(@PathVariable Long id) {
         AddressDto address = addressService.getAddressById(id);
         CustomResponse<AddressDto> response = new CustomResponse<>(200, address);
@@ -36,6 +39,7 @@ public class AddressController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAddress(#addressPayload.id)")
     public ResponseEntity<?> createAddress(@RequestBody AddressPayload addressPayload) {
         AddressDto address = addressService.createAddress(addressPayload);
         CustomResponse<AddressDto> response = new CustomResponse<>(200, address);
@@ -43,6 +47,7 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAddress(#id)")
     public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody AddressPayload addressPayload) {
         try {
             addressPayload.setId(id);
@@ -56,6 +61,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or @authCheck.hasPermissionToViewOrUpdateAddress(#id)")
     public ResponseEntity<?> deleteAddress(@PathVariable Long id) {
         try {
             AddressDto deletedAddress = addressService.deleteAddress(id);

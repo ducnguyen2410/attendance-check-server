@@ -1,6 +1,8 @@
 package com.example.demo.util;
 
 import com.example.demo.config.JwtConfig;
+import com.example.demo.dto.RoleDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.payload.UserPayload;
@@ -23,15 +25,29 @@ public class JwtUtil {
         this.jwtConfig = jwtConfig;
     }
 
-    public String generateToken(User user) {
+    public String generateAccessToken(UserDto user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", user.getRoles().stream().map(Role::getName).toList());
+        claims.put("roles", user.getRoles().stream().map(RoleDto::getName).toList());
         claims.put("username", user.getUsername());
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getAccessTokenExpiration().toMillis()))
+                .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDto user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", user.getRoles().stream().map(RoleDto::getName).toList());
+        claims.put("username", user.getUsername());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(String.valueOf(user.getId()))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getRefreshTokenExpiration().toMillis())) // 5 minutes in milliseconds
                 .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
