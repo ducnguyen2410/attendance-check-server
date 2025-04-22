@@ -1,14 +1,10 @@
 package com.example.demo;
 
-import com.example.demo.config.JwtConfig;
-import com.example.demo.entity.Role;
-import com.example.demo.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
 
